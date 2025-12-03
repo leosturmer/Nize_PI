@@ -143,7 +143,7 @@ class TelaVendas(Screen):
 
                     with HorizontalGroup():
                         yield Static(self.texto_static_alteracao, id="static_alteracao_venda")
-                        yield Button('Preencher dados', id='bt_preencher_dados')
+                        yield Button('Preencher campos', id='bt_preencher_campos')
 
                 yield Rule(orientation='horizontal', line_style='solid')
 
@@ -629,7 +629,7 @@ class TelaVendas(Screen):
             case 'bt_cadastrar':
                 self.cadastrar_venda()
 
-            case 'bt_preencher_dados':
+            case 'bt_preencher_campos':
                 try:
                     self.preencher_alteracoes_venda()
                 except ValueError:

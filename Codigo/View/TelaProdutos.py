@@ -60,7 +60,7 @@ class TelaProdutos(Screen):
 
                         with HorizontalGroup():
                             yield Static(f'\n\nSelecione o produto para visualizar as informações', id='stt_info_produto')
-                            yield Button('Preencher campos', variant='primary', id='bt_preencher_campos')
+                            yield Button('Preencher campos', id='bt_preencher_campos')
 
                     yield Rule(orientation='horizontal', line_style='solid')
 

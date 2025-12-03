@@ -131,7 +131,7 @@ class TelaEncomendas(Screen):
                             with HorizontalGroup(id="horizontal_alteracao_encomenda"):
                                 yield Static(self.texto_static_alteracao, id="static_alteracao_encomenda")
                                 
-                                yield Button('Preencher dados', id='bt_preencher_dados', disabled=True)
+                                yield Button('Preencher dados', id='bt_preencher_campos', disabled=True)
 
                                 with Center(id="tranformar_venda"):
                                     yield Button('Transformar em venda', id='bt_transformar_venda', disabled=True)
@@ -500,7 +500,7 @@ class TelaEncomendas(Screen):
                 encomenda = self.query_one('#tabela_encomendas', DataTable)
                 self.ENCOMENDA_ALTERACAO = encomenda.get_row(event.row_key)
                 self.atualizar_static_alteracao()
-                self.query_one("#bt_preencher_dados", Button).disabled = False
+                self.query_one("#bt_preencher_campos", Button).disabled = False
                 self.query_one("#bt_transformar_venda", Button).disabled = False
 
     @on(Select.Changed)
@@ -559,7 +559,7 @@ class TelaEncomendas(Screen):
             case 'bt_cadastrar':
                 self.cadastrar_encomenda()
 
-            case 'bt_preencher_dados':
+            case 'bt_preencher_campos':
                 try:
                     self.preencher_alteracoes_encomenda()
                 except:
