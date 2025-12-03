@@ -1,5 +1,4 @@
-from view import (TelaProdutos, TelaEncomendas,
-                  TelaInicial, TelaVendas, TelaPesquisa, TelaLogin, TelaCadastro)
+from View import (TelaProdutos, TelaEncomendas, TelaInicial, TelaVendas, TelaPesquisa, TelaLogin, TelaCadastro)
 
 from textual.app import (App, ComposeResult)
 
@@ -32,13 +31,13 @@ class NizeApp(App):
     CSS_PATH = 'view.tcss'
 
     SCREENS = {
-        'tela_login': TelaLogin,
-        'tela_cadastro': TelaCadastro,
-        'tela_inicial': TelaInicial,
-        'tela_produtos': TelaProdutos,
-        'tela_encomendas': TelaEncomendas,
-        'tela_vendas': TelaVendas,
-        'tela_pesquisa': TelaPesquisa
+        'tela_login': TelaLogin.TelaLogin,
+        'tela_cadastro': TelaCadastro.TelaCadastro,
+        'tela_inicial': TelaInicial.TelaInicial,
+        'tela_produtos': TelaProdutos.TelaProdutos,
+        'tela_encomendas': TelaEncomendas.TelaEncomendas,
+        'tela_vendas': TelaVendas.TelaVendas,
+        'tela_pesquisa': TelaPesquisa.TelaPesquisa
     }
 
     def on_mount(self) -> ComposeResult:
