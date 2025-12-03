@@ -1,4 +1,5 @@
 import sqlite3
+from hashlib import sha256
 
 
 class Vendedor():
