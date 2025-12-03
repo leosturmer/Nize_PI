@@ -45,7 +45,7 @@ def listar_produtos():
     return produtos
 
 def listar_produtos_encomenda():
-    'Encapsula informações para listar produtos de uma encomenda do banco de dados.'
+    'Encapsula informações para listar produtos que aceitam encomenda do banco de dados.'
 
     estoque = model.Estoque()
     produtos = model.listar_produtos_encomenda(estoque)

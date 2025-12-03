@@ -289,7 +289,7 @@ def listar_produtos_encomenda(estoque: Estoque):
     WHERE aceita_encomenda = 1;
     '''
     produtos_dict = dict()
-    lista_de_produtos = dict()
+    lista_de_produtos = list()
 
     with sqlite3.connect('nize_database.db') as conexao:
         cursor = conexao.execute(sql)
@@ -306,7 +306,7 @@ def listar_produtos_encomenda(estoque: Estoque):
                 'descricao': descricao,
                 'valor_custo': valor_custo
             }
-            lista_de_produtos[nome] = id_produto
+            lista_de_produtos.append((nome, id_produto))
 
             estoque.produtos = lista_de_produtos
 

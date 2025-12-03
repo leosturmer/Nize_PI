@@ -278,6 +278,7 @@ class TelaProdutos(Screen):
         'Ações que ocorrem ao voltar para a TelaProdutos.'
         self.limpar_texto_static()
         self.atualizar_select_produtos()
+        self.resetar_tabela_produtos()
         self.limpar_inputs_produtos()
 
     def compose(self) -> ComposeResult:
@@ -451,6 +452,7 @@ class TelaProdutos(Screen):
 
     def cadastrar_produto(self):
         'Cadastra o produto.'
+
         nome, quantidade, valor_unitario, valor_custo, imagem, aceita_encomenda, descricao = self.pegar_valores_inputs()
 
         if nome == '' or quantidade == '' or valor_unitario == '':
@@ -470,6 +472,7 @@ class TelaProdutos(Screen):
                 self.atualizar_select_produtos()
                 self.limpar_inputs_produtos()
                 self.limpar_texto_static()
+                self.resetar_tabela_produtos()
 
     def atualizar_select_produtos(self):
         'Atualiza o Select de produtos.'
@@ -514,17 +517,23 @@ class TelaProdutos(Screen):
 
         nome, quantidade, valor_unitario, valor_custo, imagem, aceita_encomenda, descricao = self.pegar_valores_inputs()
 
-        controller.update_produto(
-            id_produto, nome, valor_unitario, quantidade, imagem, aceita_encomenda, descricao, valor_custo)
+        if nome == '' or quantidade == '' or valor_unitario == '':
+            self.notify(
+                title="Ops!", message="Insira todos os dados obrigatórios", severity='warning')
 
-        self.atualizar_select_produtos()
+        else:
+            controller.update_produto(
+                id_produto, nome, valor_unitario, quantidade, imagem, aceita_encomenda, descricao, valor_custo)
 
-        self.limpar_inputs_produtos()
-        self.limpar_texto_static()
+            self.atualizar_select_produtos()
 
-        self.notify(title="Feito!", message=f"Produto {nome} alterado com sucesso!")
+            self.limpar_inputs_produtos()
+            self.limpar_texto_static()
+            self.resetar_tabela_produtos()
 
-        self.query_one("#collapsible_produtos", Collapsible).expand = False
+            self.notify(title="Feito!", message=f"Produto {nome} alterado com sucesso!")
+
+            self.query_one("#collapsible_produtos", Collapsible).expand = False
 
     def deletar_produto(self):
         id_produto = self.ID_PRODUTO
@@ -536,6 +545,8 @@ class TelaProdutos(Screen):
             self.atualizar_select_produtos()
             self.limpar_inputs_produtos()
             self.limpar_texto_static()
+            self.resetar_tabela_produtos()
+
             self.ID_PRODUTO = 0
 
         else:
@@ -687,7 +698,7 @@ class TelaEncomendas(Screen):
     def __init__(self, name=None, id=None, classes=None):
         super().__init__(name, id, classes)
 
-        self.LISTA_DE_PRODUTOS = controller.listar_produtos()
+        self.LISTA_DE_PRODUTOS = controller.listar_produtos_encomenda()
         self.ID_PRODUTO = int()
         self.PRODUTOS_QUANTIDADE = dict()
         self.texto_static_produto = 'Selecione um produto para visualizar as informações'
@@ -901,8 +912,7 @@ class TelaEncomendas(Screen):
     
     def atualizar_select_produtos(self):
         'Atualiza o select de produtos quando um novo produto é cadastrado na TelaProdutos.'
-        self.LISTA_DE_PRODUTOS = controller.listar_produtos()
-
+        self.LISTA_DE_PRODUTOS = controller.listar_produtos_encomenda()
         self.query_one("#select_produtos", Select).set_options(
             self.LISTA_DE_PRODUTOS)
 
@@ -1375,19 +1385,18 @@ class TelaVendas(Screen):
 
             with TabPane('Atualizar venda', id='tab_atualizar_venda'):
                 with Collapsible(title='Expandir tabela de venda', id="coll_vendas"):
-                    with ScrollableContainer():
-                        with HorizontalGroup():
-                            yield Checkbox("Em andamento", True, id="cbox_andamento")
-                            yield Checkbox("Aguardando pagamento", True, id='cbox_pagamento')
-                            yield Checkbox("Finalizada", True, id="cbox_finalizada")
-                            yield Checkbox("Cancelada", True, id="cbox_cancelada")
+                    with HorizontalGroup():
+                        yield Checkbox("Em andamento", True, id="cbox_andamento")
+                        yield Checkbox("Aguardando pagamento", True, id='cbox_pagamento')
+                        yield Checkbox("Finalizada", True, id="cbox_finalizada")
+                        yield Checkbox("Cancelada", True, id="cbox_cancelada")
 
-                    
-                        yield DataTable(id='tabela_vendas', )
+                
+                    yield DataTable(id='tabela_vendas', )
 
-                        with HorizontalGroup():
-                            yield Static(self.texto_static_alteracao, id="static_alteracao_venda")
-                            yield Button('Preencher dados', id='bt_preencher_dados')
+                    with HorizontalGroup():
+                        yield Static(self.texto_static_alteracao, id="static_alteracao_venda")
+                        yield Button('Preencher dados', id='bt_preencher_dados')
 
                 yield Rule(orientation='horizontal', line_style='solid')
 
@@ -1485,12 +1494,15 @@ class TelaVendas(Screen):
             self.resetar_tabela_vendas()
             self.limpar_inputs_alteracao()
 
-    def     da(self):
+    def delete_venda(self):
         'Deleta uma venda do banco de dados.'
         id_venda = self.VENDA_ALTERACAO[0]
         controller.delete_venda(id_venda)
         self.notify(title="Já era!", message='Venda deletada com sucesso!')
         self.VENDA_ALTERACAO.clear()
+    
+        self.atualizar_static_alteracao()
+        self.atualizar_static_alteracao_produto()
 
     def atualizar_select_produtos(self):
         'Atualiza o select de produtos com os novos produtos inseridos na TelaProdutos.'
@@ -1511,7 +1523,7 @@ class TelaVendas(Screen):
             id_produto, nome, quantidade, valor_unitario, valor_custo, aceita_encomenda, descricao, imagem = controller.select_produto_id(
                 id_produto)
 
-            novo_texto = f'[b]Informações do produto:[/b]\n\n[b] Produto selecionado:[/b] {nome}\n[b] Quantidade em estoque: [/b]{quantidade}'
+            novo_texto = f'[b]Informações do produto:[/b]\n\n[b] Produto selecionado:[/b] {nome}\n[b] Quantidade em estoque: [/b]{quantidade}\n [b]Valor unitário:[/b] R$ {valor_unitario}'
 
             static.update(novo_texto)
         except:
@@ -1548,21 +1560,30 @@ class TelaVendas(Screen):
         'Atualiza as informações da tela de alteração de venda.'
         static = self.query_one('#static_alteracao_venda', Static)
 
-        _id_venda, produtos, prazo, comentario, status, valor_final = self.VENDA_ALTERACAO
+        try:
+            _id_venda, produtos, prazo, comentario, status, valor_final = self.VENDA_ALTERACAO
 
-        if comentario == None:
-            comentario = ''
+            if comentario == None:
+                comentario = ''
 
-        static.update(f'[b]Venda:[/b]\n\n [b]Produtos:[/b] {produtos}\n [b]Prazo:[/b] {prazo}\n [b]Status:[/b] {status}\n [b]Comentários:[/b] {comentario}\n [b]Valor total:[/b] R$ {valor_final}')
+            static.update(f'[b]Venda:[/b]\n\n [b]Produtos:[/b] {produtos}\n [b]Prazo:[/b] {prazo}\n [b]Status:[/b] {status}\n [b]Comentários:[/b] {comentario}\n [b]Valor total:[/b] {valor_final}')
+
+        except ValueError:
+            static.update(self.texto_static_alteracao)
 
     def atualizar_static_alteracao_produto(self):
         'Atualiza as informações de produtos na tela de alteração de produto.'
 
         static = self.query_one("#stt_alteracao_produto", Static)
-        _id_venda, produtos, data, comentario, status, valor_final = self.VENDA_ALTERACAO
 
-        novo_texto = f"[b]Venda selecionada:[/b]\n\n [b]Produtos e quantidades:[/b] {produtos}\n [b]Valor final:[/b] R$ {valor_final}"
-        static.update(novo_texto)
+        try:
+            _id_venda, produtos, data, comentario, status, valor_final = self.VENDA_ALTERACAO
+
+            novo_texto = f"[b]Venda selecionada:[/b]\n\n [b]Produtos e quantidades:[/b] {produtos}\n [b]Valor final:[/b] R$ {valor_final}"
+            static.update(novo_texto)
+        except ValueError:
+            static.update("[b]Informações da venda selecionada:[/b]")
+
 
     def atualizar_tabela_cadastro_venda(self):
         'Atualiza os valores a serem preenchidos na tabela de cadastro da venda.'
@@ -1689,7 +1710,7 @@ class TelaVendas(Screen):
         self.query_one("#select_status_venda_alterada", Select).value = 1
         self.query_one("#text_comentario_alterado", TextArea).clear()
         self.query_one("#static_alteracao_venda", Static).update(
-            self.texto_static_venda)
+            self.texto_static_alteracao)
         self.query_one("#stt_alteracao_produto", Static).update("[b]Informações da venda selecionada:[/b]")
         self.query_one("#bt_alterar", Button).disabled = True
         self.query_one("#bt_deletar", Button).disabled = True

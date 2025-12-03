@@ -2,9 +2,8 @@ from view import (TelaProdutos, TelaEncomendas,
                   TelaInicial, TelaVendas, TelaPesquisa, TelaLogin, TelaCadastro)
 
 from textual.app import (App, ComposeResult)
-from textual.binding import (Binding)
 
-from textual.theme import Theme
+# from textual.theme import Theme
 
 # meu_tema = Theme(
 #     name='meu-tema',
