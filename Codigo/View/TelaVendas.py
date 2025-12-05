@@ -516,7 +516,7 @@ class TelaVendas(Screen):
 
                 if id_encomenda not in tabela.rows:
                     tabela.add_row(id_encomenda, ''.join(nome_produtos),
-                                   detalhes['data'], detalhes['comentario'], status, f"R$ {valor_final}")
+                                   detalhes['data'], detalhes['comentario'], status, f"R$ {valor_final:.2f}")
 
     def resetar_tabela_vendas(self):
         'Reseta e preenche a tabela da TelaVendas.'
