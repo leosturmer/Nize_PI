@@ -331,7 +331,7 @@ class TelaVendas(Screen):
         try:
             _id_venda, produtos, data, comentario, status, valor_final = self.VENDA_ALTERACAO
 
-            novo_texto = f"[b]Venda selecionada:[/b]\n\n [b]Produtos e quantidades:[/b] {produtos}\n [b]Valor final:[/b] R$ {valor_final}"
+            novo_texto = f"[b]Venda selecionada:[/b]\n\n [b]Produtos e quantidades:[/b] {produtos}\n [b]Valor final:[/b]  {valor_final}"
             static.update(novo_texto)
         except ValueError:
             static.update("[b]Informações da venda selecionada:[/b]")
