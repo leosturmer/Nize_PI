@@ -10,6 +10,8 @@ from textual.widgets import (Button, Input, TextArea, Footer, Header,
 from textual.screen import (Screen)
 from textual.containers import (HorizontalGroup, ScrollableContainer, VerticalScroll)
 
+from textual.suggester import Suggester, SuggestFromList
+
 
 class TelaProdutos(Screen):
     'Tela de cadastro, alteração e remoção de produtos do sistema.'
@@ -20,9 +22,10 @@ class TelaProdutos(Screen):
         super().__init__(name, id, classes)
 
         self.LISTA_DE_PRODUTOS = controller.listar_produtos()
+        self.lista_de_nomes = self.preencher_lista_de_nomes()
         self.ID_PRODUTO = int()
         self.checkbox_list_produto = list()
-
+        
     def on_mount(self):
         tabela = self.query_one("#tabela_produtos_pesquisa", DataTable)
         tabela.border_title = "Vendas"
@@ -31,6 +34,7 @@ class TelaProdutos(Screen):
 
         tabela.add_columns("Nome", "Quantidade", "Valor unitário", "Valor custo", "Aceita encomenda", "Descrição") 
         self.atualizar_tabela_produtos()
+        self.preencher_lista_de_nomes()
 
     def on_screen_resume(self):
         'Ações que ocorrem ao voltar para a TelaProdutos.'
@@ -73,8 +77,10 @@ class TelaProdutos(Screen):
                                 type='text',
                                 max_length=50,
                                 id='input_nome',
-
+                                suggester=SuggestFromList(suggestions=self.lista_de_nomes, case_sensitive=False)
                             )
+                            self.notify(f"{self.lista_de_nomes}")
+
                             yield Label("Quantidade[red]*[/red]")
                             yield Input(
                                 placeholder='Quantidade*',
@@ -138,6 +144,14 @@ class TelaProdutos(Screen):
                     yield Button('Voltar', id='bt_voltar')
 
         yield Footer(show_command_palette=False)
+
+    def preencher_lista_de_nomes(self):
+        lista_de_nomes = list()
+
+        for item in self.LISTA_DE_PRODUTOS:
+            lista_de_nomes.append(item[0])
+        return lista_de_nomes
+
 
     def pegar_inputs_produtos(self):
         'Pega os campos da TelaProdutos.'
