@@ -9,6 +9,9 @@ from textual.widgets import (Button, Input, Footer, Header,
 from textual.screen import (Screen, )
 from textual.containers import (HorizontalGroup, VerticalScroll)
 
+from textual.suggester import SuggestFromList
+
+
 class TelaPesquisa(Screen):
     TITLE = 'Pesquisa'
 
