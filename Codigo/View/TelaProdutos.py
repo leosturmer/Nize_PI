@@ -79,14 +79,13 @@ class TelaProdutos(Screen):
                                 id='input_nome',
                                 suggester=SuggestFromList(suggestions=self.lista_de_nomes, case_sensitive=False)
                             )
-                            self.notify(f"{self.lista_de_nomes}")
 
                             yield Label("Quantidade[red]*[/red]")
                             yield Input(
                                 placeholder='Quantidade*',
                                 type='integer',
                                 max_length=4,
-                                id='input_quantidade'
+                                id='input_quantidade',
                             )
 
                         with HorizontalGroup():
@@ -95,7 +94,9 @@ class TelaProdutos(Screen):
                                 placeholder='Valor unitário*',
                                 type='number',
                                 max_length=7,
-                                id='input_valor_unitario'
+                                id='input_valor_unitario',
+                                valid_empty=True
+
                             )
 
                             yield Label("Valor de custo")
