@@ -43,12 +43,16 @@ class TelaInicial(Screen):
             yield Button("Vendas", id="bt_vendas", classes="botoes_inicial", variant="warning")
             yield Button("Pesquisa", id="bt_pesquisa", classes="botoes_inicial", variant='error', disabled=True)
             yield Button("Sair", id="bt_sair", classes="botoes_inicial")
+            # yield Button("Trocar cor", id="trocar_cor")
 
     @on(Button.Pressed)
     async def on_button(self, event: Button.Pressed):
         'Ações que ocorrem ao clicar nos botões da tela.'
 
         match event.button.id:
+            # case "trocar_cor":
+            #     # if self.app.theme == ''
+            #     self.app.theme = 'textual-dark'
             case "bt_produtos":
                 self.app.switch_screen("tela_produtos")
             case "bt_encomendas":

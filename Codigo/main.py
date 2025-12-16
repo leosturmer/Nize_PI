@@ -2,7 +2,7 @@ from View import (TelaProdutos, TelaEncomendas, TelaInicial, TelaVendas, TelaPes
 from Model.__init__ import create_banco
 from textual.app import (App, ComposeResult)
 
-# from textual.theme import Theme
+from textual.theme import Theme
 
 # meu_tema = Theme(
 #     name='meu-tema',
@@ -44,6 +44,7 @@ class NizeApp(App):
         create_banco()
         self.theme = 'catppuccin-latte'
         self.push_screen('tela_inicial')
+        self.use_command_palette = False
         # self.register_theme(meu_tema)
         # self.theme = 'meu-tema'
 
