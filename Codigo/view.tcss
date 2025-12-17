@@ -5,6 +5,17 @@ Header HeaderIcon {
     display: None;
 }
 
+
+#trocar_cor {
+    dock: bottom;
+
+}
+
+#sol_lua {
+    width: 8;
+    margin-left: 2;
+}
+
 SidebarMenu {
     dock: left;
     width: 12%;
