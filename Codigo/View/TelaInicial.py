@@ -1,9 +1,9 @@
 from textual import on
 
-from textual.widgets import (Button)
+from textual.widgets import (Button, Checkbox, Switch, Label)
 from textual.screen import (Screen)
 from textual.containers import (
-    Container, VerticalGroup)
+    Container, VerticalGroup, HorizontalGroup)
 
 class SidebarMenu(Container):
     'Menu lateral vertical do sistema.'
@@ -43,16 +43,26 @@ class TelaInicial(Screen):
             yield Button("Vendas", id="bt_vendas", classes="botoes_inicial", variant="warning")
             yield Button("Pesquisa", id="bt_pesquisa", classes="botoes_inicial", variant='error', disabled=True)
             yield Button("Sair", id="bt_sair", classes="botoes_inicial")
-            # yield Button("Trocar cor", id="trocar_cor")
+        
+        with HorizontalGroup(id="trocar_cor"):
+            yield Label(content="🌞🌛", id="sol_lua")
+            yield Switch(id="switch_trocar_cor")
+
+    @on(Switch.Changed)
+    async def on_switch_changed(self, event: Switch.Changed):
+        switch = self.query_one("#switch_trocar_cor", Switch)
+                
+        match self.app.theme:
+            case 'textual-dark':
+                self.app.theme = 'catppuccin-latte'
+            case 'catppuccin-latte':
+                self.app.theme = 'textual-dark'
 
     @on(Button.Pressed)
     async def on_button(self, event: Button.Pressed):
         'Ações que ocorrem ao clicar nos botões da tela.'
 
         match event.button.id:
-            # case "trocar_cor":
-            #     # if self.app.theme == ''
-            #     self.app.theme = 'textual-dark'
             case "bt_produtos":
                 self.app.switch_screen("tela_produtos")
             case "bt_encomendas":
