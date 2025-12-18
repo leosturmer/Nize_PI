@@ -108,7 +108,6 @@ class TelaPesquisa(Screen):
         if nao_encomenda:
             self.checkbox_list_produto.append(4)
 
-    # Não filtra se dois checkboxes diferentes são apertados.
     def atualizar_tabela_produtos(self):
         'Atualiza as informações para a tabela de produtos da TelaPesquisa.'
 
@@ -149,6 +148,7 @@ class TelaPesquisa(Screen):
                 tabela.add_row(
                     nome, quantidade, f"R$ {valor_unitario}", valor_custo, aceita_encomenda, descricao)
 
+
     def resetar_tabela_produtos(self):
         'Reseta e preenche a tabela de produtos da TelaPesquisa.'
         tabela = self.query_one("#tabela_produtos_pesquisa", DataTable)
@@ -163,7 +163,10 @@ class TelaPesquisa(Screen):
 
         match select:
             case 1:
-                return controller.select_produto_nome_all(nome=pesquisa)
+                self.LISTA_DE_PRODUTOS.clear()
+                self.LISTA_DE_PRODUTOS = controller.select_produto_nome_all(nome=pesquisa)
+                self.notify(f"{self.LISTA_DE_PRODUTOS}")
+                 
             case 2:
                 pass
             case 3:
@@ -173,6 +176,11 @@ class TelaPesquisa(Screen):
             case 5:
                 pass
 
+
+    def atualizar_pesquisa(self):
+        self.fazer_pesquisa()
+        self.resetar_tabela_produtos()
+        
     @on(Checkbox.Changed)
     async def on_checkbox_change(self, event: Checkbox.Changed):
         'Ações que ocorrem ao selecionar um Checkbox.'
@@ -186,7 +194,8 @@ class TelaPesquisa(Screen):
     async def on_button(self, event: Button.Pressed):
         match event.button.id:
             case 'bt_pesquisar_produto':
-                self.resetar_tabela_produtos_pesquisa()
+                self.atualizar_pesquisa()
+                self.notify(f"{self.LISTA_DE_PRODUTOS}")
 
             case 'bt_voltar':
                 self.app.switch_screen('tela_inicial')

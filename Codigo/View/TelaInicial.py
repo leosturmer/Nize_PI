@@ -1,6 +1,6 @@
 from textual import on
 
-from textual.widgets import (Button, Checkbox, Switch, Label)
+from textual.widgets import (Button, Switch, Label)
 from textual.screen import (Screen)
 from textual.containers import (
     Container, VerticalGroup, HorizontalGroup)
@@ -14,7 +14,7 @@ class SidebarMenu(Container):
             yield Button("Produtos", id="bt_produtos", classes="botoes_inicial", variant="primary")
             yield Button("Encomendas", id="bt_encomendas", classes="botoes_inicial", variant="success")
             yield Button("Vendas", id="bt_vendas", classes="botoes_inicial", variant="warning")
-            yield Button("Pesquisa", id="bt_pesquisa", classes="botoes_inicial", variant='error', disabled=True)
+            yield Button("Pesquisa", id="bt_pesquisa", classes="botoes_inicial", variant='error')
             yield Button("Tela inicial", id="bt_inicial", classes="botoes_inicial")
 
         return super().compose()
@@ -41,7 +41,7 @@ class TelaInicial(Screen):
             yield Button("Produtos", id="bt_produtos", classes="botoes_inicial", variant="primary")
             yield Button("Encomendas", id="bt_encomendas", classes="botoes_inicial", variant="success")
             yield Button("Vendas", id="bt_vendas", classes="botoes_inicial", variant="warning")
-            yield Button("Pesquisa", id="bt_pesquisa", classes="botoes_inicial", variant='error', disabled=True)
+            yield Button("Pesquisa", id="bt_pesquisa", classes="botoes_inicial", variant='error')
             yield Button("Sair", id="bt_sair", classes="botoes_inicial")
         
         with HorizontalGroup(id="trocar_cor"):

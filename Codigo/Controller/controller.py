@@ -78,7 +78,10 @@ def select_produto_id(id_produto: int):
 def select_produto_nome(nome: str):
     'Encapsula informações para selecionar um produto pelo nome no banco de dados.'
     return model_produtos.select_produto_nome(nome)
-    
+
+def select_produto_nome_all(nome):
+    return model_produtos.select_produto_nome_all(nome)
+
 
 def select_encomenda_status(status):
     'Encapsula informações para selecionar uma encomenda pelo status no banco de dados.'
