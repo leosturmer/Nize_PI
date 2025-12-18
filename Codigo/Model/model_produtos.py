@@ -187,7 +187,7 @@ def select_produto_nome(nome_do_produto):
         produto = cursor.fetchone()
         return produto
 
-def select_produto_nome_all(nome_pesquisado):
+def select_produto_nome_all(nome_pesquisado, estoque:Estoque):
     'Seleciona todos produto pelo nome digitado.'
     
     sql = '''
@@ -201,8 +201,9 @@ def select_produto_nome_all(nome_pesquisado):
 
     with sqlite3.connect('nize_database.db') as conexao:
         cursor = conexao.execute(sql, (f'%{nome_pesquisado}%',))
-        produto = cursor.fetchall()
-        return produto
+        select_all = cursor.fetchall()
+
+        return select_all
 
     for id_produto, nome, valor_unitario, quantidade, imagem, aceita_encomenda, descricao, valor_custo in select_all:
         if id_produto not in produtos_dict:
@@ -217,4 +218,5 @@ def select_produto_nome_all(nome_pesquisado):
             }
             lista_de_produtos.append((nome, id_produto))
 
-    return produtos_dict
+        estoque.produtos = lista_de_produtos
+    return estoque

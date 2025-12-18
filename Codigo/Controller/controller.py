@@ -80,7 +80,8 @@ def select_produto_nome(nome: str):
     return model_produtos.select_produto_nome(nome)
 
 def select_produto_nome_all(nome):
-    return model_produtos.select_produto_nome_all(nome)
+    estoque = model_produtos.Estoque()
+    return model_produtos.select_produto_nome_all(nome, estoque)
 
 
 def select_encomenda_status(status):
