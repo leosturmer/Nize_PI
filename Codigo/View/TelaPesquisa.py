@@ -31,6 +31,7 @@ class TelaPesquisa(Screen):
         self.resetar_tabela_produtos()
 
     def on_screen_resume(self):
+        self.LISTA_DE_PRODUTOS = controller.listar_produtos()
         self.resetar_tabela_produtos()
 
     def compose(self):
@@ -58,6 +59,7 @@ class TelaPesquisa(Screen):
                     ], id="select_produtos_pesquisa")
                     yield Input(id="input_produto_pesquisa")
                     yield Button("Pesquisar", id="bt_pesquisar_produto")
+                    yield Button("Resetar tabela", id="bt_resetar_tabela_produtos")
 
                 with VerticalScroll():
                     yield DataTable(id='tabela_produtos_pesquisa')
@@ -112,7 +114,6 @@ class TelaPesquisa(Screen):
         'Atualiza as informações para a tabela de produtos da TelaPesquisa.'
 
         tabela = self.query_one("#tabela_produtos_pesquisa", DataTable)
-        self.LISTA_DE_PRODUTOS = controller.listar_produtos()
 
         self.pegar_checkbox_produtos()
 
@@ -157,16 +158,23 @@ class TelaPesquisa(Screen):
 
         self.atualizar_tabela_produtos()
 
+    def pesquisa_nome(self):
+        pesquisa = self.query_one("#input_produto_pesquisa", Input).value.strip()
+        self.LISTA_DE_PRODUTOS.clear()
+        self.LISTA_DE_PRODUTOS = controller.select_produto_nome_all(nome=pesquisa)
+
+        if len(self.LISTA_DE_PRODUTOS) == 0:
+            self.notify(title="Tem certeza?", message=f"Você não tem nenhum produto com este nome!", severity="warning")
+        else:
+            self.resetar_tabela_produtos()
+
+
     def fazer_pesquisa(self):
         select = self.query_one("#select_produtos_pesquisa", Select).value
-        pesquisa = self.query_one("#input_produto_pesquisa", Input).value
 
         match select:
             case 1:
-                self.LISTA_DE_PRODUTOS.clear()
-                self.LISTA_DE_PRODUTOS = controller.select_produto_nome_all(nome=pesquisa)
-                self.notify(f"{self.LISTA_DE_PRODUTOS}")
-                 
+                self.pesquisa_nome()
             case 2:
                 pass
             case 3:
@@ -175,11 +183,6 @@ class TelaPesquisa(Screen):
                 pass
             case 5:
                 pass
-
-
-    def atualizar_pesquisa(self):
-        self.fazer_pesquisa()
-        self.resetar_tabela_produtos()
         
     @on(Checkbox.Changed)
     async def on_checkbox_change(self, event: Checkbox.Changed):
@@ -194,8 +197,13 @@ class TelaPesquisa(Screen):
     async def on_button(self, event: Button.Pressed):
         match event.button.id:
             case 'bt_pesquisar_produto':
-                self.atualizar_pesquisa()
-                self.notify(f"{self.LISTA_DE_PRODUTOS}")
+                self.fazer_pesquisa()
+                # self.notify(f"{self.LISTA_DE_PRODUTOS}")
+
+
+            case "bt_resetar_tabela_produtos":
+                self.LISTA_DE_PRODUTOS = controller.listar_produtos()
+                self.resetar_tabela_produtos()
 
             case 'bt_voltar':
                 self.app.switch_screen('tela_inicial')
