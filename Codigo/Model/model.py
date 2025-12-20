@@ -279,26 +279,6 @@ with sqlite3.connect('nize_database.db') as conexao:
 #             ''')
 
 
-# def select_produto_quantidade(quantidade_produto):
-#     sql = '''
-#     SELECT id_produto, nome, quantidade, valor_unitario, valor_custo, aceita_encomenda, descricao, imagem 
-#     FROM view_produtos
-#     WHERE quantidade LIKE ?;
-#     '''
-
-#     with sqlite3.connect('nize_database.db') as conexao:
-#         cursor = conexao.execute(sql, (f'%{quantidade_produto}%',))
-#         select_all = cursor.fetchall()
-
-#         for id_produto, nome, quantidade, valor_unitario, valor_custo, aceita_encomenda, descricao, imagem in select_all:
-#             print(f'''
-#             Produto ID: {id_produto}
-#             Nome: {nome} | Quantidade: {quantidade}
-#             Valor unitário: {valor_unitario} | Valor custo: {valor_custo}
-#             Aceita encomenda: {aceita_encomenda} | Descrição: {descricao}
-#             ''')
-
-
 # def select_produto_descricao(descricao_produto):
 #     sql = '''
 #     SELECT id_produto, nome, quantidade, valor_unitario, valor_custo, aceita_encomenda, descricao, imagem 

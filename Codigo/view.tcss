@@ -53,7 +53,7 @@ SidebarMenu {
     align: left top;
 }
 
-#bt_transformar_venda {
+#bt_transformar_venda, #bt_resetar_tabela_produtos, #bt_pesquisar_produto {
     margin: 1;
 }
 

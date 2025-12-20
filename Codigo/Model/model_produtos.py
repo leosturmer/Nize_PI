@@ -218,3 +218,97 @@ def select_produto_nome_all(nome_pesquisado, estoque:Estoque):
             estoque.produtos = lista_de_produtos
 
     return estoque.produtos
+
+def select_produto_quantidade_minima(quantidade_produto, estoque:Estoque): ##########################
+    sql = '''
+    SELECT id_produto, nome, quantidade, valor_unitario, valor_custo, aceita_encomenda, descricao, imagem 
+    FROM view_produtos
+    WHERE quantidade LIKE ?;
+    '''
+
+    produtos_dict = dict()
+    lista_de_produtos = []
+
+    with sqlite3.connect('nize_database.db') as conexao:
+        cursor = conexao.execute(sql, (f'%{quantidade_produto}%',))
+        select_all = cursor.fetchall()
+
+    for id_produto, nome, valor_unitario, quantidade, imagem, aceita_encomenda, descricao, valor_custo in select_all:
+        if id_produto not in produtos_dict:
+            produtos_dict[id_produto] = {
+                'nome': nome,
+                'valor_unitario': valor_unitario,
+                'quantidade': quantidade,
+                'imagem': imagem,
+                'aceita_encomenda': aceita_encomenda,
+                'descricao': descricao,
+                'valor_custo': valor_custo
+            }
+            lista_de_produtos.append((nome, id_produto))
+
+            estoque.produtos = lista_de_produtos
+
+    return estoque.produtos
+
+
+def select_produto_quantidade_maxima(quantidade_produto, estoque:Estoque): #########################
+    sql = '''
+    SELECT id_produto, nome, quantidade, valor_unitario, valor_custo, aceita_encomenda, descricao, imagem 
+    FROM view_produtos
+    WHERE quantidade = ?;
+    '''
+
+    produtos_dict = dict()
+    lista_de_produtos = []
+
+    with sqlite3.connect('nize_database.db') as conexao:
+        cursor = conexao.execute(sql, (f'%{quantidade_produto}%',))
+        select_all = cursor.fetchall()
+
+    for id_produto, nome, valor_unitario, quantidade, imagem, aceita_encomenda, descricao, valor_custo in select_all:
+        if id_produto not in produtos_dict:
+            produtos_dict[id_produto] = {
+                'nome': nome,
+                'valor_unitario': valor_unitario,
+                'quantidade': quantidade,
+                'imagem': imagem,
+                'aceita_encomenda': aceita_encomenda,
+                'descricao': descricao,
+                'valor_custo': valor_custo
+            }
+            lista_de_produtos.append((nome, id_produto))
+
+            estoque.produtos = lista_de_produtos
+
+    return estoque.produtos
+
+def select_produto_descricao(descricao_produto, estoque:Estoque):
+    sql = '''
+    SELECT id_produto, nome, quantidade, valor_unitario, valor_custo, aceita_encomenda, descricao, imagem 
+    FROM view_produtos
+    WHERE descricao LIKE ?;
+    '''
+
+    produtos_dict = dict()
+    lista_de_produtos = []
+
+    with sqlite3.connect('nize_database.db') as conexao:
+        cursor = conexao.execute(sql, (f'%{descricao_produto}%',))
+        select_all = cursor.fetchall()
+
+    for id_produto, nome, valor_unitario, quantidade, imagem, aceita_encomenda, descricao, valor_custo in select_all:
+        if id_produto not in produtos_dict:
+            produtos_dict[id_produto] = {
+                'nome': nome,
+                'valor_unitario': valor_unitario,
+                'quantidade': quantidade,
+                'imagem': imagem,
+                'aceita_encomenda': aceita_encomenda,
+                'descricao': descricao,
+                'valor_custo': valor_custo
+            }
+            lista_de_produtos.append((nome, id_produto))
+
+            estoque.produtos = lista_de_produtos
+
+    return estoque.produtos

@@ -7,10 +7,13 @@ from textual.widgets import (Button, Input, Footer, Header,
                              Select, TabbedContent, TabPane, DataTable,
                              Checkbox)
 from textual.screen import (Screen, )
-from textual.containers import (HorizontalGroup, VerticalScroll)
+from textual.containers import (HorizontalGroup, VerticalScroll, ScrollableContainer)
 
 from textual.suggester import SuggestFromList
 
+
+class PesquisaProdutos(ScrollableContainer):
+    pass 
 
 class TelaPesquisa(Screen):
     TITLE = 'Pesquisa'
@@ -52,10 +55,11 @@ class TelaPesquisa(Screen):
                 with HorizontalGroup():
                     yield Select(prompt='Filtrar por:', options=[
                         ('nome', 1),
-                        ("quantidade", 2),
-                        ('valor unitário', 3),
-                        ('valor de custo', 4),
-                        ('descrição', 5)
+                        ("quantidade mínima", 2),
+                        ('quantidade máxima', 3),
+                        ('valor mínimo', 4),
+                        ('valor valor máximo', 5),
+                        ('descrição', 6)
                     ], id="select_produtos_pesquisa")
                     yield Input(id="input_produto_pesquisa")
                     yield Button("Pesquisar", id="bt_pesquisar_produto")
@@ -158,7 +162,7 @@ class TelaPesquisa(Screen):
 
         self.atualizar_tabela_produtos()
 
-    def pesquisa_nome(self):
+    def pesquisar_nome(self):
         pesquisa = self.query_one("#input_produto_pesquisa", Input).value.strip()
         self.LISTA_DE_PRODUTOS.clear()
         self.LISTA_DE_PRODUTOS = controller.select_produto_nome_all(nome=pesquisa)
@@ -168,21 +172,80 @@ class TelaPesquisa(Screen):
         else:
             self.resetar_tabela_produtos()
 
+    def pesquisar_quantidade_minima(self): ############################################
+        pesquisa = self.query_one("#input_produto_pesquisa", Input).value.strip()
+        self.LISTA_DE_PRODUTOS.clear()
+
+        try:
+            int_pesquisa = int(pesquisa)
+            self.LISTA_DE_PRODUTOS = controller.select_produto_quantidade_minima(quantidade_produto=pesquisa)
+
+            if len(self.LISTA_DE_PRODUTOS) == 0:
+                self.notify(title="Tem certeza?", message=f"Você não tem nenhum produto com esta quantidade!", severity="warning")
+            else:
+                self.resetar_tabela_produtos()
+
+        except ValueError:
+            self.notify(title="Epa!", message="Você precisa inserir um número!", severity="warning")
+
+    def pesquisar_quantidade_maxima(self): #########################################
+        pesquisa = self.query_one("#input_produto_pesquisa", Input).value.strip()
+        self.LISTA_DE_PRODUTOS.clear()
+
+        try:
+            int_pesquisa = int(pesquisa)
+            self.LISTA_DE_PRODUTOS = controller.select_produto_quantidade(quantidade_produto=pesquisa)
+
+            if len(self.LISTA_DE_PRODUTOS) == 0:
+                self.notify(title="Tem certeza?", message=f"Você não tem nenhum produto com esta quantidade!", severity="warning")
+            else:
+                self.resetar_tabela_produtos()
+
+        except ValueError:
+            self.notify(title="Epa!", message="Você precisa inserir um número!", severity="warning")
+
+    def pesquisar_valor_minimo(self): #########################################
+        pass
+
+    def pesquisar_valor_maximo(self): #########################################
+        pass
+
+    def pesquisar_descricao(self):
+        pesquisa = self.query_one("#input_produto_pesquisa", Input).value.strip()
+        
+        self.LISTA_DE_PRODUTOS.clear()
+        self.LISTA_DE_PRODUTOS = controller.select_produto_descricao(descricao=pesquisa)
+
+        if len(self.LISTA_DE_PRODUTOS) == 0:
+            self.notify(title="Tem certeza?", message=f"Não tem nenhuma descrição com esse termo!", severity="warning")
+        else:
+            self.resetar_tabela_produtos()
 
     def fazer_pesquisa(self):
         select = self.query_one("#select_produtos_pesquisa", Select).value
 
         match select:
             case 1:
-                self.pesquisa_nome()
+                self.pesquisar_nome()
             case 2:
-                pass
+                self.pesquisar_quantidade_minima()
             case 3:
-                pass
+                self.pesquisar_quantidade_maxima()
             case 4:
-                pass
+                self.pesquisarva()
             case 5:
-                pass
+                self.pesquisar_descricao()
+            case 6:
+                self.pesquisar_descricao()
+            case _:
+                self.notify(title="Opa!", message="Você precisa selecionar uma opção!", severity="warning")
+
+                        #   ('nome', 1),
+                        # ("quantidade mínima", 2),
+                        # ('quantidade máxima', 3),
+                        # ('valor mínimo', 4),
+                        # ('valor valor máximo', 5),
+                        # ('descrição', 6)          
         
     @on(Checkbox.Changed)
     async def on_checkbox_change(self, event: Checkbox.Changed):
@@ -198,8 +261,6 @@ class TelaPesquisa(Screen):
         match event.button.id:
             case 'bt_pesquisar_produto':
                 self.fazer_pesquisa()
-                # self.notify(f"{self.LISTA_DE_PRODUTOS}")
-
 
             case "bt_resetar_tabela_produtos":
                 self.LISTA_DE_PRODUTOS = controller.listar_produtos()

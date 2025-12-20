@@ -83,6 +83,20 @@ def select_produto_nome_all(nome):
     estoque = model_produtos.Estoque()
     return model_produtos.select_produto_nome_all(nome, estoque)
 
+def select_produto_quantidade_minima(quantidade_produto):
+    estoque = model_produtos.Estoque()
+    return model_produtos.select_produto_quantidade_minima(quantidade_produto, estoque)
+
+def select_produto_quantidade_maxima(quantidade_produto):
+    estoque = model_produtos.Estoque()
+    return model_produtos.select_produto_quantidade_maxima(quantidade_produto, estoque)
+
+def select_produto_descricao(descricao):
+    estoque = model_produtos.Estoque()
+    return model_produtos.select_produto_descricao(descricao, estoque)
+
+
+
 
 def select_encomenda_status(status):
     'Encapsula informações para selecionar uma encomenda pelo status no banco de dados.'
