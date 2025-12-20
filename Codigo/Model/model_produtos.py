@@ -223,14 +223,14 @@ def select_produto_quantidade_minima(quantidade_produto, estoque:Estoque): #####
     sql = '''
     SELECT id_produto, nome, quantidade, valor_unitario, valor_custo, aceita_encomenda, descricao, imagem 
     FROM view_produtos
-    WHERE quantidade LIKE ?;
+    WHERE quantidade >= ?;
     '''
 
     produtos_dict = dict()
     lista_de_produtos = []
 
     with sqlite3.connect('nize_database.db') as conexao:
-        cursor = conexao.execute(sql, (f'%{quantidade_produto}%',))
+        cursor = conexao.execute(sql, (quantidade_produto,))
         select_all = cursor.fetchall()
 
     for id_produto, nome, valor_unitario, quantidade, imagem, aceita_encomenda, descricao, valor_custo in select_all:
@@ -255,14 +255,14 @@ def select_produto_quantidade_maxima(quantidade_produto, estoque:Estoque): #####
     sql = '''
     SELECT id_produto, nome, quantidade, valor_unitario, valor_custo, aceita_encomenda, descricao, imagem 
     FROM view_produtos
-    WHERE quantidade = ?;
+    WHERE quantidade <= ?;
     '''
 
     produtos_dict = dict()
     lista_de_produtos = []
 
     with sqlite3.connect('nize_database.db') as conexao:
-        cursor = conexao.execute(sql, (f'%{quantidade_produto}%',))
+        cursor = conexao.execute(sql, (quantidade_produto,))
         select_all = cursor.fetchall()
 
     for id_produto, nome, valor_unitario, quantidade, imagem, aceita_encomenda, descricao, valor_custo in select_all:

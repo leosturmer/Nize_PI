@@ -194,7 +194,7 @@ class TelaPesquisa(Screen):
 
         try:
             int_pesquisa = int(pesquisa)
-            self.LISTA_DE_PRODUTOS = controller.select_produto_quantidade(quantidade_produto=pesquisa)
+            self.LISTA_DE_PRODUTOS = controller.select_produto_quantidade_maxima(quantidade_produto=pesquisa)
 
             if len(self.LISTA_DE_PRODUTOS) == 0:
                 self.notify(title="Tem certeza?", message=f"Você não tem nenhum produto com esta quantidade!", severity="warning")
@@ -232,20 +232,13 @@ class TelaPesquisa(Screen):
             case 3:
                 self.pesquisar_quantidade_maxima()
             case 4:
-                self.pesquisarva()
+                self.pesquisar_valor_minimo()
             case 5:
-                self.pesquisar_descricao()
+                self.pesquisar_valor_maximo()
             case 6:
                 self.pesquisar_descricao()
             case _:
-                self.notify(title="Opa!", message="Você precisa selecionar uma opção!", severity="warning")
-
-                        #   ('nome', 1),
-                        # ("quantidade mínima", 2),
-                        # ('quantidade máxima', 3),
-                        # ('valor mínimo', 4),
-                        # ('valor valor máximo', 5),
-                        # ('descrição', 6)          
+                self.notify(title="Opa!", message="Você precisa selecionar uma opção!", severity="warning") 
         
     @on(Checkbox.Changed)
     async def on_checkbox_change(self, event: Checkbox.Changed):
