@@ -195,7 +195,8 @@ class TelaProdutos(Screen):
         self.query_one("#bt_limpar", Button).disabled = True
         self.query_one("#bt_alterar", Button).disabled = True
         self.query_one("#bt_deletar", Button).disabled = True
-        self.query_one("#select_produtos", Select).value = Select.BLANK
+        self.query_one("#select_produtos", Select).clear()
+        
 
     def atualizar_texto_static(self):
         'Atualiza as informações do produto selecionado na TelaProdutos.'
@@ -427,6 +428,7 @@ class TelaProdutos(Screen):
     async def on_select(self, event: Select.Changed):
         'Ações que ocorrem ao trocar o item selecioando no Select.'
         self.ID_PRODUTO = event.select.value
+
         if event.select.value == Select.BLANK:
             pass
         else:
